@@ -3,26 +3,37 @@ int scl = 20;
 
 PVector[][] flowfield;
 ArrayList<Particle> particles = new ArrayList<Particle>();
+boolean reverse = false;
+int lastSwitchTime = 0;
+float counter = 0;
 
 void setup() {
   size(800, 800, P2D);
   cols = floor(width / scl);
   rows = floor(height / scl);
   flowfield = new PVector[cols][rows];
-  for (int i = 0; i < 3000; i++) {
+  for (int i = 0; i < 10000; i++) {
     particles.add(new Particle());
   }
 }
 
 void draw() {
   background(7, 0, 112);
-  float time = millis() * 0.001; // Time component for Perlin noise
+  float time = millis() * 0.0001; // Time component for Perlin noise
+
+  if (millis() - lastSwitchTime > 1000) {
+    counter += 0.1;
+    lastSwitchTime = millis();
+  }
+
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       float theta = map(noise(i * 0.1, j * 0.1, time), 0, 1, 0, TWO_PI);
+      theta += counter * PI;
       flowfield[i][j] = PVector.fromAngle(theta);
     }
   }
+
   for (Particle p : particles) {
     p.follow(flowfield);
     p.update();
@@ -47,7 +58,7 @@ class Particle {
   PVector pos;
   PVector vel;
   PVector acc;
-  float maxSpeed = 10;
+  float maxSpeed = 0.5;
   color dotColor;
 
   Particle() {
@@ -86,7 +97,7 @@ class Particle {
 
   void show() {
     stroke(dotColor, 90);
-    strokeWeight(15);
+    strokeWeight(3);
     point(pos.x, pos.y);
   }
 }
