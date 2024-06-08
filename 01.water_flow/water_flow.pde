@@ -9,7 +9,7 @@ void setup() {
   cols = floor(width / scl);
   rows = floor(height / scl);
   flowfield = new PVector[cols][rows];
-  for (int i = 0; i < 3000; i++) {
+  for (int i = 0; i < 15000; i++) {
     particles.add(new Particle());
   }
 }
@@ -19,7 +19,7 @@ void draw() {
   float time = millis() * 0.001; // Time component for Perlin noise
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-      float theta = map(noise(i * 0.1, j * 0.1, time), 0, 1, 0, TWO_PI);
+      float theta = map(noise(i * 0.1, j * 0.1, time), 0, 0.8, 0, TWO_PI);
       flowfield[i][j] = PVector.fromAngle(theta);
     }
   }
@@ -85,8 +85,8 @@ class Particle {
   }
 
   void show() {
-    stroke(dotColor, 90);
-    strokeWeight(15);
+    stroke(dotColor, 92);
+    strokeWeight(4);
     point(pos.x, pos.y);
   }
 }
